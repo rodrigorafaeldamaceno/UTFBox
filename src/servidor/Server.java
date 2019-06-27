@@ -5,7 +5,7 @@
  */
 package servidor;
 
-import cliente.Arquivo;
+import arquivo.Arquivo;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -22,36 +22,38 @@ import java.net.Socket;
 public class Server {
 
     public static void main(String args[]) {
-        //String user = "talysson";
+
         try {
             // 1
             ServerSocket srvSocket = new ServerSocket(5566);
-            System.out.println("Aguardando envio de arquivo ...");
-            Socket socket = srvSocket.accept();
+            while (true) {
+                System.out.println("Aguardando envio de arquivo ...");
 
-            // 2
-            byte[] objectAsByte = new byte[socket.getReceiveBufferSize()];
-            BufferedInputStream bf = new BufferedInputStream(socket.getInputStream());
-            bf.read(objectAsByte);
+                Socket socket = srvSocket.accept();
 
-            // 3
-            Arquivo arquivo = (Arquivo) getObjectFromByte(objectAsByte);
-            /*
-          * // 4 String dir = arquivo.getDiretorioDestino().endsWith("/") ?
-          * arquivo.getDiretorioDestino() + arquivo.getNome() :
-          * arquivo.getDiretorioDestino() + "/" + arquivo.getNome();
-          * System.out.println("Escrevendo arquivo " + dir);
-             */
+                // 2
+                byte[] objectAsByte = new byte[socket.getReceiveBufferSize()];
+                BufferedInputStream bf = new BufferedInputStream(socket.getInputStream());
+                bf.read(objectAsByte);
 
-            File diretorio = new File("C://utfboxServidor/" + arquivo.getUsuario());
-            diretorio.mkdir();
-            String dir = "C://utfboxServidor/" + arquivo.getUsuario() + "/" + arquivo.getNome();
-            System.out.println("Escrevendo arquivo " + dir);
+                // 3
+                Arquivo arquivo = (Arquivo) getObjectFromByte(objectAsByte);
+                /*
+                * // 4 String dir = arquivo.getDiretorioDestino().endsWith("/") ?
+                * arquivo.getDiretorioDestino() + arquivo.getNome() :
+                * arquivo.getDiretorioDestino() + "/" + arquivo.getNome();
+                * System.out.println("Escrevendo arquivo " + dir);
+                 */
 
-            FileOutputStream fos = new FileOutputStream(dir);
-            fos.write(arquivo.getConteudo());
-            fos.close();
+                File diretorio = new File("C://utfboxServidor/" + arquivo.getUsuario());
+                diretorio.mkdir();
+                String dir = "C://utfboxServidor/" + arquivo.getUsuario() + "/" + arquivo.getNome();
+                System.out.println("Escrevendo arquivo " + dir);
 
+                FileOutputStream fos = new FileOutputStream(dir);
+                fos.write(arquivo.getConteudo());
+                fos.close();
+            }
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

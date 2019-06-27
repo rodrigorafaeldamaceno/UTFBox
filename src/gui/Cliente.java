@@ -23,7 +23,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.*;
 
-import cliente.Arquivo;
+import arquivo.Arquivo;
 
 public class Cliente extends javax.swing.JFrame {
 
@@ -182,11 +182,14 @@ public class Cliente extends javax.swing.JFrame {
                 bf.flush();
                 bf.close();
                 socket.close();
+                JOptionPane.showMessageDialog(null, "Arquivo enviado com sucesso!");
             } catch (UnknownHostException e) {
                 //System.out.print("falha 1");
+                JOptionPane.showMessageDialog(null, "Erro ao acessar o servidor");
                 e.printStackTrace();
             } catch (IOException e) {
                 //System.out.print("falha 2");
+                JOptionPane.showMessageDialog(null, "Erro ao acessar o servidor");
                 e.printStackTrace();
             }
         }
