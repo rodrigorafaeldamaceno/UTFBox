@@ -17,6 +17,7 @@ public class Arquivo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String nome;
+    private String dataModificacao;
     private byte[] conteudo;
     private transient long tamanhoKB;
     private String usuario;
@@ -81,6 +82,16 @@ public class Arquivo implements Serializable {
     public void setUsuario(String usuario) {
         this.usuario = usuario;
     }
+
+    public String getDataModificacao() {
+        return dataModificacao;
+    }
+
+    public void setDataModificacao(String dataModificacao) {
+        this.dataModificacao = dataModificacao;
+    }
+    
+    
     
     
 

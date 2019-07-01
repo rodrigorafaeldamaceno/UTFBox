@@ -3,7 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/Rodri/Documents/NetBeansProjects/UTFBox/src/gui/LoginPage.java</file>
+            <file>file:/C:/Users/Rodri/Documents/NetBeansProjects/UTFBox/src/conexoes/ConexaoSqliteArquivo.java</file>
             <file>file:/C:/Users/Rodri/Documents/NetBeansProjects/UTFBox/src/servidor/Server.java</file>
+            <file>file:/C:/Users/Rodri/Documents/NetBeansProjects/UTFBox/src/gui/Cliente.java</file>
+            <file>file:/C:/Users/Rodri/Documents/NetBeansProjects/UTFBox/src/conexoes/ConexaoSQLite.java</file>
+            <file>file:/C:/Users/Rodri/Documents/NetBeansProjects/UTFBox/src/gui/ClienteGui.java</file>
             <file>file:/C:/Users/Rodri/Documents/NetBeansProjects/UTFBox/src/arquivo/Arquivo.java</file>
         </group>
     </open-files>

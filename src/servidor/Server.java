@@ -6,6 +6,7 @@
 package servidor;
 
 import arquivo.Arquivo;
+import conexoes.ConexaoSqliteArquivo;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -14,6 +15,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  *
@@ -53,12 +56,23 @@ public class Server {
                 FileOutputStream fos = new FileOutputStream(dir);
                 fos.write(arquivo.getConteudo());
                 fos.close();
+                
+                Date dataAtual = new Date(System.currentTimeMillis());
+                SimpleDateFormat formatarDate = new SimpleDateFormat("yyyy-MM-dd");
+                
+                gravarArquivoBD(arquivo.getNome(), arquivo.getUsuario(),formatarDate.format(dataAtual), dir);
+                
             }
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
+    }
+
+    public static void gravarArquivoBD(String nome,String dono,String dt_modificacao,String dir){
+        ConexaoSqliteArquivo conexaoArquivo = new ConexaoSqliteArquivo();
+        conexaoArquivo.inserirArquivo(nome, dono, dt_modificacao, dir);
     }
 
     private static Object getObjectFromByte(byte[] objectAsByte) {

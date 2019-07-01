@@ -8,7 +8,7 @@ import java.sql.*;
 
 /**
  *
- * @author bruno
+ * @author Rodrigo Rafael
  */
 public class ConexaoSQLite {
 
@@ -32,7 +32,7 @@ public class ConexaoSQLite {
         return true;
     }
 
-    public void inserir(String name, String pass){
+    public void inserirUsuario(String name, String pass){
         Statement stmt = null;
         try{
             String url = "jdbc:sqlite:banco_de_dados/banco_sqlite.db";
@@ -56,7 +56,7 @@ public class ConexaoSQLite {
 
     }
     
-    public boolean select(String name, String pass){
+    public boolean selectUsuario(String name, String pass){
         Statement stmt = null;
         boolean achou=false;
         try{

@@ -234,13 +234,17 @@ public class LoginPage extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Erro ao fazer login");
             return;
         }
-        
+        /*
         Cliente cliente = new Cliente(nome);
         cliente.setVisible(true);
-
+        */
+        ClienteGui cliente = new ClienteGui(nome);
+        cliente.setVisible(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_jbLoginActionPerformed
 
+    
+    
     private void jbRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbRegistrarActionPerformed
         String nome = jtfRegNome.getText().toUpperCase();
         String pass1 = jtfRegPass1.getText();
@@ -250,11 +254,18 @@ public class LoginPage extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Dados faltando.");
             return;
         }
+        
+        if(pass1.length()<8){
+            JOptionPane.showMessageDialog(null, "Senha precisa conter no minimo 8 caracteres.");
+            return;
+        }
         System.out.println(pass1 + "\n" + pass2);
         if (!pass1.equals(pass2)) {
             JOptionPane.showMessageDialog(null, "Senhas não conferem");
             return;
         }
+        
+        
         
         pass1 = stringHexa(gerarHash(pass1));
 
@@ -315,14 +326,14 @@ public class LoginPage extends javax.swing.JFrame {
         if (!existe) {
             System.out.println("usuario ja cadastrado");
         } else {
-            conexaoSQLite.inserir(nome, password);
+            conexaoSQLite.inserirUsuario(nome, password);
         }
     }
 
     public static boolean fazerLogin(String nome, String password) {
         ConexaoSQLite conexaoSQLite = new ConexaoSQLite();
-        conexaoSQLite.select(nome.toUpperCase(), password);
-        if (conexaoSQLite.select(nome, password)) {
+        conexaoSQLite.selectUsuario(nome.toUpperCase(), password);
+        if (conexaoSQLite.selectUsuario(nome, password)) {
             return true;
         } else {
             return false;
