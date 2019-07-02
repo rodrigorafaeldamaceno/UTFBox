@@ -56,11 +56,11 @@ public class ConexaoSqliteArquivo {
             String url = "jdbc:sqlite:banco_de_dados/banco_sqlite.db";
             this.conexao = DriverManager.getConnection(url);
             this.conexao.setAutoCommit(false);
-            //System.out.println("Conexao estabelecida");
+            // System.out.println("Conexao estabelecida");
 
             stmt = this.conexao.createStatement();
-            String sql = "INSERT INTO ARQUIVO(NOME, DONO, DATA_MODIFICACAO, DIRETORIO) VALUES(" + "'" + nome + "','" + dono
-                    + "','" + dt_modificacao + "','" + dir + "');";
+            String sql = "INSERT INTO ARQUIVO(NOME, DONO, DATA_MODIFICACAO, DIRETORIO) VALUES(" + "'" + nome + "','"
+                    + dono + "','" + dt_modificacao + "','" + dir + "');";
 
             stmt.executeUpdate(sql);
             stmt.close();
@@ -75,7 +75,7 @@ public class ConexaoSqliteArquivo {
 
     }
 
-    public ArrayList buscarArquivosUser(String dono) {
+    public ArrayList buscarArquivosUser(String usuario) {
 
         Statement stmt = null;
         boolean achou = false;
@@ -89,12 +89,20 @@ public class ConexaoSqliteArquivo {
             //System.out.println("Conexao estabelecida");
 
             stmt = this.conexao.createStatement();
-            String sqlQuery = "SELECT NOME, DONO, DATA_MODIFICACAO FROM ARQUIVO WHERE UPPER(DONO)='" + dono + "';";
+            //String sqlQuery = "SELECT NOME, DONO, DATA_MODIFICACAO FROM ARQUIVO WHERE UPPER(DONO)='" + dono + "';";
+            String sqlQuery = "SELECT US.NOME AS USUARIO, ARQ.NOME AS ARQUIVO, ARQ.DATA_MODIFICACAO AS DATA_MODIFICACAO FROM USER AS US, ARQUIVO AS ARQ" +
+                                "WHERE ARQ.DONO=US.NOME AND ARQ.DONO='"+ usuario + "'"+
+                                "UNION ALL"+
+                                "select ARQCOMP.USER AS USUARIO, ARQ.NOME AS ARQUIVO, ARQ.DATA_MODIFICACAO AS DATA_MODIFICACAO "+
+                                "from ARQUIVO ARQ, USER_ARQUIVO_COMPARTILHADO AS ARQCOMP"+
+                                "WHERE ARQ.ID=ARQCOMP.ARQUIVO_IDAND ARQCOMP.USER='"+usuario+"');";
+            
+            
             ResultSet rs = stmt.executeQuery(sqlQuery);
 
             while (rs.next()) {
                 Arquivo arq = new Arquivo();
-                arq.setNome(rs.getString("NOME"));
+                arq.setNome(rs.getString("ARQUIVO"));
                 arq.setUsuario(rs.getString("DONO"));
                 arq.setDataModificacao(rs.getString("DATA_MODIFICACAO"));
 
