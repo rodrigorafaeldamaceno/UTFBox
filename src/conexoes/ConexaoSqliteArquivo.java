@@ -75,43 +75,44 @@ public class ConexaoSqliteArquivo {
 
     }
 
-    public ArrayList<Arquivo> buscarArquivosUser(String name){
-        
+    public ArrayList buscarArquivosUser(String dono) {
+
         Statement stmt = null;
-        boolean achou=false;
-        
-        ArrayList<Arquivo> arquivos = new ArrayList();
-        
-        try{
+        boolean achou = false;
+
+        ArrayList<Arquivo> arquivos = new ArrayList<Arquivo>();
+
+        try {
             String url = "jdbc:sqlite:banco_de_dados/banco_sqlite.db";
             this.conexao = DriverManager.getConnection(url);
             this.conexao.setAutoCommit(false);
             //System.out.println("Conexao estabelecida");
 
             stmt = this.conexao.createStatement();
-            String sqlQuery = "SELECT NOME, DONO, DATA_MODIFICACAO FROM ARQUIVO WHERE UPPER(dono)='"+name+"';";
+            String sqlQuery = "SELECT NOME, DONO, DATA_MODIFICACAO FROM ARQUIVO WHERE UPPER(DONO)='" + dono + "';";
             ResultSet rs = stmt.executeQuery(sqlQuery);
-            
-            Arquivo arq = new Arquivo();
+
             while (rs.next()) {
+                Arquivo arq = new Arquivo();
                 arq.setNome(rs.getString("NOME"));
                 arq.setUsuario(rs.getString("DONO"));
                 arq.setDataModificacao(rs.getString("DATA_MODIFICACAO"));
-                
+
                 arquivos.add(arq);
-                System.out.println("Arquivo: "+arq.getNome() + " Dono: " + arq.getUsuario());
+                System.out.println("Arquivo: " + arq.getNome() + " Dono: " + arq.getUsuario());
             }
-            
+
             rs.close();
             stmt.close();
-            this.conexao.close();  
-            
-        } catch ( Exception e ) {
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            this.conexao.close();
+            return arquivos;
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
             //System.exit(0);
-          }
-        
-          //System.out.println("Select executado");  
-          return arquivos;
         }
+
+        //System.out.println("Select executado");  
+        return null;
+    }
 }

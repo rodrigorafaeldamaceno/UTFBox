@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author Rodri
  */
-public class ConexaoSqliteArquivo {
+public class ConexaoSqliteArquivoCompartilhado {
 
     private Connection conexao;
 
@@ -50,7 +50,7 @@ public class ConexaoSqliteArquivo {
         return true;
     }
 
-    public void inserirArquivo(String nome, String dono, String dt_modificacao, String dir) {
+    public void inserirArquivoComp(String user, String arquivo, String dir) {
         Statement stmt = null;
         try {
             String url = "jdbc:sqlite:banco_de_dados/banco_sqlite.db";
@@ -59,8 +59,7 @@ public class ConexaoSqliteArquivo {
             //System.out.println("Conexao estabelecida");
 
             stmt = this.conexao.createStatement();
-            String sql = "INSERT INTO ARQUIVO(NOME, DONO, DATA_MODIFICACAO, DIRETORIO) VALUES(" + "'" + nome + "','" + dono
-                    + "','" + dt_modificacao + "','" + dir + "');";
+            String sql = "INSERT INTO USER_ARQUIVO_COMPARTILHADO(USER, ARQUIVO, DIRETORIO) VALUES(" + "'" + user + "','" + arquivo + dir + "');";
 
             stmt.executeUpdate(sql);
             stmt.close();
@@ -75,43 +74,43 @@ public class ConexaoSqliteArquivo {
 
     }
 
-    public ArrayList<Arquivo> buscarArquivosUser(String name){
-        
+    public ArrayList buscarArquivosUserComp(String usuario) {
+
         Statement stmt = null;
-        boolean achou=false;
-        
-        ArrayList<Arquivo> arquivos = new ArrayList();
-        
-        try{
+
+        ArrayList<Arquivo> arquivos = new ArrayList<Arquivo>();
+
+        try {
             String url = "jdbc:sqlite:banco_de_dados/banco_sqlite.db";
             this.conexao = DriverManager.getConnection(url);
             this.conexao.setAutoCommit(false);
             //System.out.println("Conexao estabelecida");
 
             stmt = this.conexao.createStatement();
-            String sqlQuery = "SELECT NOME, DONO, DATA_MODIFICACAO FROM ARQUIVO WHERE UPPER(dono)='"+name+"';";
+            String sqlQuery = "SELECT ARQUIVO, USER, DIRETORIO, DATA_MODIFICACAO FROM USER_ARQUIVO_COMPARTILHADO WHERE UPPER(USER)='" + usuario + "';";
             ResultSet rs = stmt.executeQuery(sqlQuery);
-            
-            Arquivo arq = new Arquivo();
+
             while (rs.next()) {
-                arq.setNome(rs.getString("NOME"));
-                arq.setUsuario(rs.getString("DONO"));
+                Arquivo arq = new Arquivo();
+                arq.setNome(rs.getString("ARQUIVO"));
+                arq.setUsuario(rs.getString("USER"));
                 arq.setDataModificacao(rs.getString("DATA_MODIFICACAO"));
-                
+
                 arquivos.add(arq);
-                System.out.println("Arquivo: "+arq.getNome() + " Dono: " + arq.getUsuario());
+                System.out.println("Arquivo: " + arq.getNome() + " Dono: " + arq.getUsuario());
             }
-            
+
             rs.close();
             stmt.close();
-            this.conexao.close();  
-            
-        } catch ( Exception e ) {
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            this.conexao.close();
+            return arquivos;
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
             //System.exit(0);
-          }
-        
-          //System.out.println("Select executado");  
-          return arquivos;
         }
+
+        //System.out.println("Select executado");  
+        return null;
+    }
 }

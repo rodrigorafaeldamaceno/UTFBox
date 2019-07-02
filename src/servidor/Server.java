@@ -56,12 +56,12 @@ public class Server {
                 FileOutputStream fos = new FileOutputStream(dir);
                 fos.write(arquivo.getConteudo());
                 fos.close();
-                
+
                 Date dataAtual = new Date(System.currentTimeMillis());
                 SimpleDateFormat formatarDate = new SimpleDateFormat("yyyy-MM-dd");
-                
-                gravarArquivoBD(arquivo.getNome(), arquivo.getUsuario(),formatarDate.format(dataAtual), dir);
-                
+
+                gravarArquivoBD(arquivo.getNome(), arquivo.getUsuario(), formatarDate.format(dataAtual), dir);
+
             }
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -70,7 +70,7 @@ public class Server {
 
     }
 
-    public static void gravarArquivoBD(String nome,String dono,String dt_modificacao,String dir){
+    public static void gravarArquivoBD(String nome, String dono, String dt_modificacao, String dir) {
         ConexaoSqliteArquivo conexaoArquivo = new ConexaoSqliteArquivo();
         conexaoArquivo.inserirArquivo(nome, dono, dt_modificacao, dir);
     }
