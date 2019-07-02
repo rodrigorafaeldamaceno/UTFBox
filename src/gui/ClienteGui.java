@@ -300,7 +300,7 @@ public class ClienteGui extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonEnviarActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        baixarArquivo(this.arquivo);
+        //baixarArquivo(this.arquivo);
 
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -347,7 +347,7 @@ public class ClienteGui extends javax.swing.JFrame {
         }
     }
 
-    public void baixarArquivo(File file) {
+    /*public void baixarArquivo(File file) {
         int buffer;
         Socket socket = null;
         BufferedInputStream in = null;
@@ -376,7 +376,7 @@ public class ClienteGui extends javax.swing.JFrame {
                 //e.printStackTrace(outUsu);
             }
         }
-    }
+    }*/
 
     private byte[] serializarArquivo() {
         try {

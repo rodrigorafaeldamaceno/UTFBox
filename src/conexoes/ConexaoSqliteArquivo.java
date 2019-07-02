@@ -90,20 +90,19 @@ public class ConexaoSqliteArquivo {
 
             stmt = this.conexao.createStatement();
             //String sqlQuery = "SELECT NOME, DONO, DATA_MODIFICACAO FROM ARQUIVO WHERE UPPER(DONO)='" + dono + "';";
-            String sqlQuery = "SELECT US.NOME AS USUARIO, ARQ.NOME AS ARQUIVO, ARQ.DATA_MODIFICACAO AS DATA_MODIFICACAO FROM USER AS US, ARQUIVO AS ARQ" +
-                                "WHERE ARQ.DONO=US.NOME AND ARQ.DONO='"+ usuario + "'"+
-                                "UNION ALL"+
-                                "select ARQCOMP.USER AS USUARIO, ARQ.NOME AS ARQUIVO, ARQ.DATA_MODIFICACAO AS DATA_MODIFICACAO "+
-                                "from ARQUIVO ARQ, USER_ARQUIVO_COMPARTILHADO AS ARQCOMP"+
-                                "WHERE ARQ.ID=ARQCOMP.ARQUIVO_IDAND ARQCOMP.USER='"+usuario+"');";
-            
-            
+            String sqlQuery = "SELECT US.NOME AS USUARIO, ARQ.NOME AS ARQUIVO, ARQ.DATA_MODIFICACAO AS DATA_MODIFICACAO FROM USER AS US, ARQUIVO AS ARQ "
+                    + "WHERE ARQ.DONO=US.NOME AND ARQ.DONO='" + usuario + "' "
+                    + "UNION ALL "
+                    + "select ARQ.DONO AS USUARIO, ARQ.NOME AS ARQUIVO, ARQ.DATA_MODIFICACAO AS DATA_MODIFICACAO "
+                    + "from ARQUIVO ARQ, USER_ARQUIVO_COMPARTILHADO AS ARQCOMP "
+                    + "WHERE ARQ.ID=ARQCOMP.ARQUIVO_ID AND ARQCOMP.USER='" + usuario + "';";
+
             ResultSet rs = stmt.executeQuery(sqlQuery);
 
             while (rs.next()) {
                 Arquivo arq = new Arquivo();
                 arq.setNome(rs.getString("ARQUIVO"));
-                arq.setUsuario(rs.getString("DONO"));
+                arq.setUsuario(rs.getString("USUARIO"));
                 arq.setDataModificacao(rs.getString("DATA_MODIFICACAO"));
 
                 arquivos.add(arq);
