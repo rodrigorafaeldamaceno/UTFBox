@@ -19,6 +19,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.*;
 import arquivo.Arquivo;
+import conexoes.ConexaoSQLite;
 import conexoes.ConexaoSqliteArquivo;
 import java.io.BufferedInputStream;
 import java.io.DataOutputStream;
@@ -42,7 +43,7 @@ public class ClienteGui extends javax.swing.JFrame {
     public ClienteGui(String nome) {
 
         this.usuario = nome;
-
+        this.arquivos = listarArquivos();
         initComponents();
         addRowInTable();
 
@@ -51,14 +52,19 @@ public class ClienteGui extends javax.swing.JFrame {
     private void addRowInTable() {
 
         DefaultTableModel model = (DefaultTableModel) jTableArquivos.getModel();
-        ArrayList<Arquivo> list = listarArquivos();
-        Object rowData[] = new Object[3];
+        ArrayList<Arquivo> list = this.arquivos;
+        Object rowData[] = new Object[4];
         for (int i = 0; i < list.size(); i++) {
             rowData[0] = list.get(i).getNome();
             rowData[1] = list.get(i).getUsuario();
             rowData[2] = list.get(i).getDataModificacao();
+            rowData[3] = list.get(i).getDiretorio();
             model.addRow(rowData);
         }
+    }
+
+    private Object getSelectedObject() {
+        return this.arquivos.get(jTableArquivos.getSelectedRow());
     }
 
     /**
@@ -147,6 +153,11 @@ public class ClienteGui extends javax.swing.JFrame {
         });
 
         jButtonCompartilhar.setText("Compartilhar");
+        jButtonCompartilhar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCompartilharActionPerformed(evt);
+            }
+        });
 
         jButtonDeletar.setText("Deletar");
         jButtonDeletar.setToolTipText("");
@@ -160,11 +171,11 @@ public class ClienteGui extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Nome", "Autor", "Data Alteração"
+                "Nome", "Autor", "Data Alteração", "Diretorio"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -201,7 +212,6 @@ public class ClienteGui extends javax.swing.JFrame {
                                 .addComponent(jButtonCompartilhar)
                                 .addGap(168, 168, 168)
                                 .addComponent(jButtonDeletar))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jButton1)
                                 .addGroup(layout.createSequentialGroup()
@@ -215,7 +225,8 @@ public class ClienteGui extends javax.swing.JFrame {
                                     .addComponent(jLabel3)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(jTextFieldPorta, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(jTextFieldNome)))
+                            .addComponent(jTextFieldNome)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(188, 188, 188)
                         .addComponent(jLabel4)))
@@ -305,19 +316,50 @@ public class ClienteGui extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButtonCompartilharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCompartilharActionPerformed
+        String  user_name;
+        try{
+            Arquivo arqComp = (Arquivo) getSelectedObject();
+            System.out.println("ID: " + arqComp.getId() + "\nAutor: " + arqComp.getUsuario());
+            user_name = JOptionPane.showInputDialog("Informe o usuario que ira receber o arquivo").toUpperCase();
+            
+            ConexaoSQLite conexaoSQLite = new ConexaoSQLite();
+            int existe = conexaoSQLite.existeUserName(user_name);
+            if (existe != -1) {
+                inserirArquivoComp(user_name, arqComp.getId());
+                JOptionPane.showMessageDialog(null, "Compartilhado com sucesso!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Usuario não encontrado.");
+                
+            }
+
+            
+            
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Selecione um arquivo");
+        }
+        
+    }//GEN-LAST:event_jButtonCompartilharActionPerformed
+
     /**
      * @param args the command line arguments
      */
     private ArrayList listarArquivos() {
         ConexaoSqliteArquivo conexao = new ConexaoSqliteArquivo();
         ArrayList<Arquivo> arq = conexao.buscarArquivosUser(this.usuario);
-
+        /*
         for (int i = 0; i < arq.size(); i++) {
             System.out.println(arq.get(i).getNome());
             //arquivos = conexao.buscarArquivosUser(this.usuario);
         }
+         */
         return arq;
 
+    }
+
+    private void inserirArquivoComp(String user, int arquivo_id) {
+        ConexaoSqliteArquivo conexaoArquivo = new ConexaoSqliteArquivo();
+        conexaoArquivo.inserirArquivoComp(user, arquivo_id);
     }
 
     private void enviarArquivoServidor() {
@@ -377,7 +419,6 @@ public class ClienteGui extends javax.swing.JFrame {
             }
         }
     }*/
-
     private byte[] serializarArquivo() {
         try {
             ByteArrayOutputStream bao = new ByteArrayOutputStream();

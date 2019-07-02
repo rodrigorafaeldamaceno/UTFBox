@@ -7,7 +7,7 @@ package gui;
 
 /**
  *
- * @author Rodri
+ * @author Rodrigo rafael
  */
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;

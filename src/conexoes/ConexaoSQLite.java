@@ -16,7 +16,7 @@ public class ConexaoSQLite {
     /**
      * Conecta a um banco de dados (cria o banco se ele não existir)
      *
-     * @return
+     * @author Rodrigo Rafael
      */
     public boolean conectar() {
 
@@ -65,7 +65,7 @@ public class ConexaoSQLite {
             //System.out.println("Conexao estabelecida");
 
             stmt = this.conexao.createStatement();
-            String sqlQuery = "select upper(nome) as nome from user where upper(nome)='" + name + "' and password='" + pass + "';";
+            String sqlQuery = "select id, upper(nome) as nome from user where upper(nome)='" + name + "' and password='" + pass + "';";
             ResultSet rs = stmt.executeQuery(sqlQuery);
 
             while (rs.next()) {
@@ -87,9 +87,10 @@ public class ConexaoSQLite {
         return achou;
     }
 
-    public boolean existeUserName(String name) {
+    public int existeUserName(String name) {
         Statement stmt = null;
-        boolean achou = true;
+        //boolean achou = true;
+        int user_id = -1;
         try {
             String url = "jdbc:sqlite:banco_de_dados/banco_sqlite.db";
             this.conexao = DriverManager.getConnection(url);
@@ -97,13 +98,15 @@ public class ConexaoSQLite {
             //System.out.println("Conexao estabelecida");
 
             stmt = this.conexao.createStatement();
-            String sqlQuery = "select upper(nome) as nome from user where upper(nome)='" + name + "';";
+            String sqlQuery = "select ID, upper(nome) as nome from user where upper(nome)='" + name + "';";
             ResultSet rs = stmt.executeQuery(sqlQuery);
 
             while (rs.next()) {
                 if (rs.getString("nome") != null) {
-                    achou = false;
+                    user_id = Integer.parseInt(rs.getString("ID"));
+                    System.out.println(user_id);
                 };
+                
             }
 
             rs.close();
@@ -111,12 +114,13 @@ public class ConexaoSQLite {
             this.conexao.close();
 
         } catch (Exception e) {
+            user_id = -1;
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             //System.exit(0);
         }
 
         //System.out.println("Select executado");  
-        return achou;
+        return user_id;
     }
 
     public boolean desconectar() {

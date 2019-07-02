@@ -248,6 +248,7 @@ public class LoginPage extends javax.swing.JFrame {
         String nome = jtfRegNome.getText().toUpperCase();
         String pass1 = jtfRegPass1.getText();
         String pass2 = jtfRegPass2.getText();
+        boolean flag = false;
 
         if (nome.isEmpty() || pass1.isEmpty() || pass2.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Dados faltando.");
@@ -267,14 +268,16 @@ public class LoginPage extends javax.swing.JFrame {
         pass1 = stringHexa(gerarHash(pass1));
 
         try {
-            registrar(nome, pass1);
+            flag=registrar(nome, pass1);
             // TODO add your handling code here:
         } catch (NoSuchAlgorithmException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao registrar");
             return;
         }
-
-        JOptionPane.showMessageDialog(null, "Usuario criado com sucesso");
+        if(flag){
+            JOptionPane.showMessageDialog(null, "Usuario criado com sucesso");
+        }
+        
 
 
     }//GEN-LAST:event_jbRegistrarActionPerformed
@@ -314,14 +317,16 @@ public class LoginPage extends javax.swing.JFrame {
         });
     }
 
-    public static void registrar(String nome, String password) throws NoSuchAlgorithmException {
+    public static boolean registrar(String nome, String password) throws NoSuchAlgorithmException {
 
         ConexaoSQLite conexaoSQLite = new ConexaoSQLite();
-        boolean existe = conexaoSQLite.existeUserName(nome);
-        if (!existe) {
-            System.out.println("usuario ja cadastrado");
+        int existe = conexaoSQLite.existeUserName(nome);
+        if (existe != -1) {
+            JOptionPane.showMessageDialog(null, "Usuario já cadastrado");
+            return false;
         } else {
             conexaoSQLite.inserirUsuario(nome, password);
+            return true;
         }
     }
 

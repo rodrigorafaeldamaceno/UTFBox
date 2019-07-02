@@ -20,7 +20,7 @@ import java.util.Date;
 
 /**
  *
- * @author Rodri
+ * @author Rodrigo Rafael
  */
 public class Server {
 

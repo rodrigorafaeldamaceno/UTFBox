@@ -10,7 +10,7 @@ import java.util.Date;
 
 /**
  *
- * @author Rodri
+ * @author Rodrigo Rafael
  */
 public class Arquivo implements Serializable {
 
@@ -24,9 +24,10 @@ public class Arquivo implements Serializable {
     private transient Date dataHoraUpload;
     private transient String ipDestino;
     private transient String portaDestino;
-    
-    //private String diretorioDestino;
+    private transient String diretorio;
+    private transient int id;
 
+    //private String diretorioDestino;
     public String getNome() {
         return nome;
     }
@@ -41,6 +42,14 @@ public class Arquivo implements Serializable {
 
     public void setConteudo(byte[] conteudo) {
         this.conteudo = conteudo;
+    }
+
+    public String getDiretorio() {
+        return diretorio;
+    }
+
+    public void setDiretorio(String diretorio) {
+        this.diretorio = diretorio;
     }
 
     public long getTamanhoKB() {
@@ -79,6 +88,14 @@ public class Arquivo implements Serializable {
         return usuario;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public void setUsuario(String usuario) {
         this.usuario = usuario;
     }
@@ -90,9 +107,5 @@ public class Arquivo implements Serializable {
     public void setDataModificacao(String dataModificacao) {
         this.dataModificacao = dataModificacao;
     }
-    
-    
-    
-    
 
 }
