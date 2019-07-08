@@ -7,6 +7,9 @@ package gui;
 
 import conexoes.ConexaoSQLite;
 import gui.Cliente;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
@@ -230,16 +233,26 @@ public class LoginPage extends javax.swing.JFrame {
         password = stringHexa(gerarHash(jtfpLoginPass.getText()));
 
         System.out.println(nome);
-        if (!fazerLogin(nome, password)) {
-            JOptionPane.showMessageDialog(null, "Erro ao fazer login");
-            return;
+
+        
+        try {
+            if (!fazerLoginSocket(nome, password)) {
+                JOptionPane.showMessageDialog(null, "Erro ao fazer login");
+                return;
+            }else{
+                ClienteGui cliente = new ClienteGui(nome);
+                cliente.setVisible(true);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(LoginPage.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         /*
         Cliente cliente = new Cliente(nome);
         cliente.setVisible(true);
          */
-        ClienteGui cliente = new ClienteGui(nome);
-        cliente.setVisible(true);
+        //ClienteGui cliente = new ClienteGui(nome);
+        //cliente.setVisible(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_jbLoginActionPerformed
 
@@ -330,14 +343,37 @@ public class LoginPage extends javax.swing.JFrame {
         }
     }
 
+    
+
+  
+
     public static boolean fazerLogin(String nome, String password) {
         ConexaoSQLite conexaoSQLite = new ConexaoSQLite();
         conexaoSQLite.selectUsuario(nome.toUpperCase(), password);
-        if (conexaoSQLite.selectUsuario(nome, password)) {
+        if (conexaoSQLite.selectUsuario(nome.toUpperCase(), password)) {
             return true;
         } else {
             return false;
         }
+    }
+
+    public static boolean fazerLoginSocket(String nome, String password) throws IOException {
+        Socket socket = new Socket("127.0.0.1",
+                        Integer.parseInt("5566"));
+                //BufferedOutputStream bf = new BufferedOutputStream(socket.getOutputStream());
+        ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+        
+        output.writeUTF(nome);
+        output.flush();
+        output.writeUTF(password);
+        output.flush();
+        
+        
+        
+        
+        return fazerLogin(nome, password);
+        
+        
     }
 
     public static byte[] gerarHash(String frase) {

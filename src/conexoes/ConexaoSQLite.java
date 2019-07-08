@@ -71,6 +71,8 @@ public class ConexaoSQLite {
             while (rs.next()) {
                 if (rs.getString("nome") != null) {
                     achou = true;
+                }else{
+                    achou=false;
                 };
             }
 
