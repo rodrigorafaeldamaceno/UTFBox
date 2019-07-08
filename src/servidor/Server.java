@@ -19,6 +19,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 /**
  *
@@ -27,10 +30,19 @@ import java.util.Date;
 public class Server {
 
     public static void main(String args[]) {
+        
+        
 
         try {
+            //Cria os objetos necessário para instânciar o servidor
+            JLabel lblMessage = new JLabel("Porta do Servidor:");
+            JTextField txtPorta = new JTextField("5566");
+            Object[] texts = {lblMessage, txtPorta};
+            JOptionPane.showMessageDialog(null, texts);
+            
+            
             // 1
-            ServerSocket srvSocket = new ServerSocket(5566);
+            ServerSocket srvSocket = new ServerSocket(Integer.parseInt(txtPorta.getText()));
             while (true) {
 
                 while (autenticar(srvSocket)) {
