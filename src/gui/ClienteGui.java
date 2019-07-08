@@ -96,6 +96,7 @@ public class ClienteGui extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableArquivos = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
+        jbAtualizar = new javax.swing.JButton();
 
         javax.swing.GroupLayout jFrame2Layout = new javax.swing.GroupLayout(jFrame2.getContentPane());
         jFrame2.getContentPane().setLayout(jFrame2Layout);
@@ -194,6 +195,14 @@ public class ClienteGui extends javax.swing.JFrame {
             }
         });
 
+        jbAtualizar.setText("Atualizar");
+        jbAtualizar.setToolTipText("");
+        jbAtualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbAtualizarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -206,31 +215,36 @@ public class ClienteGui extends javax.swing.JFrame {
                             .addComponent(jButtonArquivo)
                             .addComponent(jLabelTamanho)
                             .addComponent(jLabel5)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jButtonEnviar)
-                                .addGap(34, 34, 34)
-                                .addComponent(jButtonCompartilhar)
-                                .addGap(168, 168, 168)
-                                .addComponent(jButtonDeletar))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jButton1)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel1)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addComponent(jLabel2)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(jTextFieldIP, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGap(46, 46, 46)
-                                    .addComponent(jLabel3)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jTextFieldPorta, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(jTextFieldNome)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel1)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel2)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jTextFieldIP, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGap(46, 46, 46)
+                                        .addComponent(jLabel3)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jTextFieldPorta, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(81, 81, 81))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jButtonEnviar)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jButtonCompartilhar)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jbAtualizar)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jButton1)
+                                        .addGap(31, 31, 31)))
+                                .addComponent(jButtonDeletar))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(188, 188, 188)
                         .addComponent(jLabel4)))
-                .addGap(0, 202, Short.MAX_VALUE))
+                .addGap(0, 181, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -256,7 +270,8 @@ public class ClienteGui extends javax.swing.JFrame {
                     .addComponent(jButtonEnviar)
                     .addComponent(jButtonCompartilhar)
                     .addComponent(jButtonDeletar)
-                    .addComponent(jButton1))
+                    .addComponent(jButton1)
+                    .addComponent(jbAtualizar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel5)
                 .addGap(5, 5, 5)
@@ -320,7 +335,7 @@ public class ClienteGui extends javax.swing.JFrame {
         String  user_name;
         try{
             Arquivo arqComp = (Arquivo) getSelectedObject();
-            System.out.println("ID: " + arqComp.getId() + "\nAutor: " + arqComp.getUsuario());
+            //System.out.println("ID: " + arqComp.getId() + "\nAutor: " + arqComp.getUsuario());
             user_name = JOptionPane.showInputDialog("Informe o usuario que ira receber o arquivo").toUpperCase();
             
             ConexaoSQLite conexaoSQLite = new ConexaoSQLite();
@@ -332,14 +347,21 @@ public class ClienteGui extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Usuario não encontrado.");
                 
             }
-
-            
-            
+ 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Selecione um arquivo");
         }
         
     }//GEN-LAST:event_jButtonCompartilharActionPerformed
+
+    private void jbAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAtualizarActionPerformed
+        // TODO add your handling code here:
+        atualizarArquivoServidor();
+        this.dispose();
+        new ClienteGui(this.usuario).setVisible(true);
+
+
+    }//GEN-LAST:event_jbAtualizarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -360,6 +382,33 @@ public class ClienteGui extends javax.swing.JFrame {
     private void inserirArquivoComp(String user, int arquivo_id) {
         ConexaoSqliteArquivo conexaoArquivo = new ConexaoSqliteArquivo();
         conexaoArquivo.inserirArquivoComp(user, arquivo_id);
+    }
+
+    private void atualizarArquivoServidor(){
+        if (validaArquivo()) {
+            try {
+                Socket socket = new Socket(jTextFieldIP.getText().trim(),
+                        Integer.parseInt(jTextFieldPorta.getText().trim()));
+
+                BufferedOutputStream bf = new BufferedOutputStream(socket.getOutputStream());
+
+                byte[] bytea = serializarArquivoCompartilhado();
+                bf.write(bytea);
+                bf.flush();
+                bf.close();
+                socket.close();
+                JOptionPane.showMessageDialog(null, "Arquivo atualizado com sucesso!");
+
+            } catch (UnknownHostException e) {
+                //System.out.print("falha 1");
+                JOptionPane.showMessageDialog(null, "Erro ao acessar o servidor");
+                e.printStackTrace();
+            } catch (IOException e) {
+                //System.out.print("falha 2");
+                JOptionPane.showMessageDialog(null, "Erro ao acessar o servidor");
+                e.printStackTrace();
+            }
+        }
     }
 
     private void enviarArquivoServidor() {
@@ -433,6 +482,24 @@ public class ClienteGui extends javax.swing.JFrame {
         return null;
     }
 
+    private byte[] serializarArquivoCompartilhado() {
+        try {
+            ByteArrayOutputStream bao = new ByteArrayOutputStream();
+            ObjectOutputStream ous;
+            ous = new ObjectOutputStream(bao);
+
+            Arquivo arqTemp = (Arquivo) getSelectedObject();
+            arquivo.setUsuario(arqTemp.getUsuario());
+
+            ous.writeObject(arquivo);
+            return bao.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     private boolean validaArquivo() {
         if (arquivo.getTamanhoKB() > tamanhoPermitidoKB) {
             JOptionPane.showMessageDialog(this,
@@ -491,5 +558,6 @@ public class ClienteGui extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldIP;
     private javax.swing.JTextField jTextFieldNome;
     private javax.swing.JTextField jTextFieldPorta;
+    private javax.swing.JButton jbAtualizar;
     // End of variables declaration//GEN-END:variables
 }
