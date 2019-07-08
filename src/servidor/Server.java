@@ -32,6 +32,7 @@ public class Server {
             // 1
             ServerSocket srvSocket = new ServerSocket(5566);
             while (true) {
+
                 while (autenticar(srvSocket)) {
                     System.out.println("Aguardando envio de arquivo ...");
 
@@ -94,12 +95,23 @@ public class Server {
 
         String user = input.readUTF();
         String pass = input.readUTF();
+        boolean login = false;
 
-        System.out.println("User: " + user + " Pass: " + pass);
-        input.close();
+        //System.out.println("User: " + user + " Pass: " + pass);
+        //input.close();
+
+        login = fazerLogin(user, pass);
+
+        
+
+        //System.out.println("User: " + user + " Pass: " + pass + login);
+        output.writeBoolean(login);
         output.close();
+        input.close();
+        socket.close();
+        //output.close();
 
-        return fazerLogin(user, pass);
+        return login;
     }
 
     public static void gravarArquivoBD(String nome, String dono, String dt_modificacao, String dir) {

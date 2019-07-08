@@ -8,6 +8,7 @@ package gui;
 import conexoes.ConexaoSQLite;
 import gui.Cliente;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.security.MessageDigest;
@@ -232,14 +233,18 @@ public class LoginPage extends javax.swing.JFrame {
         }
         password = stringHexa(gerarHash(jtfpLoginPass.getText()));
 
-        System.out.println(nome);
+        /*System.out.println(nome);
+        try {
+            System.out.println(fazerLoginSocket(nome, password));
+        } catch (IOException ex) {
+            Logger.getLogger(LoginPage.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
 
-        
         try {
             if (!fazerLoginSocket(nome, password)) {
                 JOptionPane.showMessageDialog(null, "Erro ao fazer login");
                 return;
-            }else{
+            } else {
                 ClienteGui cliente = new ClienteGui(nome);
                 cliente.setVisible(true);
             }
@@ -261,7 +266,6 @@ public class LoginPage extends javax.swing.JFrame {
         String nome = jtfRegNome.getText().toUpperCase();
         String pass1 = jtfRegPass1.getText();
         String pass2 = jtfRegPass2.getText();
-        boolean flag = false;
 
         if (nome.isEmpty() || pass1.isEmpty() || pass2.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Dados faltando.");
@@ -281,16 +285,15 @@ public class LoginPage extends javax.swing.JFrame {
         pass1 = stringHexa(gerarHash(pass1));
 
         try {
-            flag=registrar(nome, pass1);
+            if (registrar(nome, pass1)) {
+                JOptionPane.showMessageDialog(null, "Usuario criado com sucesso");
+                //return true;
+            }
             // TODO add your handling code here:
         } catch (NoSuchAlgorithmException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao registrar");
-            return;
+            //return false;
         }
-        if(flag){
-            JOptionPane.showMessageDialog(null, "Usuario criado com sucesso");
-        }
-        
 
 
     }//GEN-LAST:event_jbRegistrarActionPerformed
@@ -343,10 +346,7 @@ public class LoginPage extends javax.swing.JFrame {
         }
     }
 
-    
-
-  
-
+    /*
     public static boolean fazerLogin(String nome, String password) {
         ConexaoSQLite conexaoSQLite = new ConexaoSQLite();
         conexaoSQLite.selectUsuario(nome.toUpperCase(), password);
@@ -355,25 +355,31 @@ public class LoginPage extends javax.swing.JFrame {
         } else {
             return false;
         }
-    }
-
+    }*/
     public static boolean fazerLoginSocket(String nome, String password) throws IOException {
-        Socket socket = new Socket("127.0.0.1",
-                        Integer.parseInt("5566"));
-                //BufferedOutputStream bf = new BufferedOutputStream(socket.getOutputStream());
+        boolean login = false;
+        Socket socket = new Socket("127.0.0.1",Integer.parseInt("5566"));
+        //BufferedOutputStream bf = new BufferedOutputStream(socket.getOutputStream());
         ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
-        
+        ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+
         output.writeUTF(nome);
         output.flush();
         output.writeUTF(password);
         output.flush();
-        
-        
-        
-        
-        return fazerLogin(nome, password);
-        
-        
+        //output.close();
+        //System.out.println(login);
+
+        login = input.readBoolean();
+
+        System.out.println("Logado: " + login);
+
+
+        //input.close();
+
+        //socket.close();
+        return login;
+
     }
 
     public static byte[] gerarHash(String frase) {
